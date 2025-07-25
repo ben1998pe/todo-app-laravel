@@ -10,10 +10,34 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $tasks = Task::orderBy('created_at', 'desc')->get();
-        return view('tasks.index', compact('tasks'));
+        $query = Task::query();
+
+        // Filtros
+        if ($request->filled('category')) {
+            $query->byCategory($request->category);
+        }
+
+        if ($request->filled('priority')) {
+            $query->byPriority($request->priority);
+        }
+
+        if ($request->filled('status')) {
+            if ($request->status === 'completed') {
+                $query->completed();
+            } elseif ($request->status === 'pending') {
+                $query->pending();
+            }
+        }
+
+        $tasks = $query->orderBy('created_at', 'desc')->get();
+
+        // Datos para los filtros
+        $categories = Task::distinct()->pluck('category')->sort();
+        $priorities = ['Alta', 'Media', 'Baja'];
+
+        return view('tasks.index', compact('tasks', 'categories', 'priorities'));
     }
 
     /**
@@ -21,7 +45,10 @@ class TaskController extends Controller
      */
     public function create()
     {
-        return view('tasks.create');
+        $categories = ['Personal', 'Trabajo', 'Salud', 'Hogar', 'Estudio', 'Otros'];
+        $priorities = ['Baja', 'Media', 'Alta'];
+        
+        return view('tasks.create', compact('categories', 'priorities'));
     }
 
     /**
@@ -31,6 +58,8 @@ class TaskController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
+            'category' => 'required|string|max:100',
+            'priority' => 'required|in:Baja,Media,Alta',
             'description' => 'nullable|string',
             'due_date' => 'nullable|date'
         ]);
@@ -54,7 +83,10 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        return view('tasks.edit', compact('task'));
+        $categories = ['Personal', 'Trabajo', 'Salud', 'Hogar', 'Estudio', 'Otros'];
+        $priorities = ['Baja', 'Media', 'Alta'];
+        
+        return view('tasks.edit', compact('task', 'categories', 'priorities'));
     }
 
     /**
@@ -64,6 +96,8 @@ class TaskController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
+            'category' => 'required|string|max:100',
+            'priority' => 'required|in:Baja,Media,Alta',
             'description' => 'nullable|string',
             'due_date' => 'nullable|date'
         ]);

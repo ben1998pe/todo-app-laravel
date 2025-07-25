@@ -43,6 +43,16 @@
                                 {{ $task->completed ? 'Completada' : 'Pendiente' }}
                             </span>
                             
+                            <span class="badge bg-secondary me-2">
+                                <i class="fas fa-folder me-1"></i>
+                                {{ $task->category }}
+                            </span>
+                            
+                            <span class="badge bg-{{ $task->priority_color }} me-2">
+                                <i class="fas fa-exclamation-triangle me-1"></i>
+                                {{ $task->priority }}
+                            </span>
+                            
                             @if($task->due_date)
                                 <span class="badge bg-info">
                                     <i class="fas fa-calendar me-1"></i>

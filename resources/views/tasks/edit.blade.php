@@ -42,6 +42,58 @@
                         @enderror
                     </div>
 
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="category" class="form-label">
+                                    <i class="fas fa-folder me-1"></i>
+                                    Categoría *
+                                </label>
+                                <select class="form-select @error('category') is-invalid @enderror" 
+                                        id="category" 
+                                        name="category" 
+                                        required>
+                                    <option value="">Selecciona una categoría</option>
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category }}" {{ old('category', $task->category) == $category ? 'selected' : '' }}>
+                                            {{ $category }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('category')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="priority" class="form-label">
+                                    <i class="fas fa-exclamation-triangle me-1"></i>
+                                    Prioridad *
+                                </label>
+                                <select class="form-select @error('priority') is-invalid @enderror" 
+                                        id="priority" 
+                                        name="priority" 
+                                        required>
+                                    <option value="">Selecciona la prioridad</option>
+                                    @foreach($priorities as $priority)
+                                        <option value="{{ $priority }}" {{ old('priority', $task->priority) == $priority ? 'selected' : '' }}>
+                                            {{ $priority }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('priority')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="mb-3">
                         <label for="description" class="form-label">
                             <i class="fas fa-align-left me-1"></i>
